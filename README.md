@@ -2,7 +2,7 @@
 
 **Traduit les restrictions sécheresse VigiEau en impacts opérationnels vérifiables pour les sites professionnels.**
 
-[![Tests](https://github.com/gbesse/jev-vigieau-ops/actions/workflows/test.yml/badge.svg)](https://github.com/gbesse/jev-vigieau-ops/actions/workflows/test.yml) [MIT](LICENSE) · Node.js 22+ · v0.1.1 · Documentation française
+[![Tests](https://github.com/gbesse/jev-vigieau-ops/actions/workflows/test.yml/badge.svg)](https://github.com/gbesse/jev-vigieau-ops/actions/workflows/test.yml) [MIT](LICENSE) · Node.js 22+ · v0.1.2 · Documentation française
 
 Le moteur filtre les restrictions selon le site, le profil d’usager, le type d’eau et la période. Jev relie ensuite une opération décrite aux règles déjà applicables.
 
@@ -16,6 +16,69 @@ npm run demo
 ```
 
 La démonstration utilise uniquement des données et probabilités synthétiques. Elle n’effectue aucun appel réseau et ne constitue pas une mesure de qualité de Jev.
+
+## Exemple exécutable
+
+Cet exemple évalue le lavage de véhicules pendant une restriction sécheresse. Il utilise un fournisseur Jev simulé : aucune clé API ni connexion réseau n’est nécessaire. L’assertion intégrée fait échouer la commande si le comportement attendu change.
+
+Le code complet de [`examples/demo.mjs`](examples/demo.mjs) est directement copiable :
+
+```js
+// Objectif : démontrer la frontière de décision sans appel réseau.
+import assert from "node:assert/strict";
+import { assessOperation } from "../src/index.mjs";
+import { createFakeProvider } from "../src/jev.mjs";
+const p = createFakeProvider(() => ({
+  model: "jev-1.13.0",
+  answers: {
+    impact: {
+      type: "choice",
+      choice: "conditional",
+      probabilities: {
+        allowed: 0.05,
+        conditional: 0.8,
+        possibly_prohibited: 0.1,
+        unclear: 0.05,
+      },
+      confidence: 0.8,
+    },
+  },
+  usage: {},
+}));
+const resultat = await assessOperation(
+  {
+    id: "site-1",
+    latitude: 43.6,
+    longitude: 1.44,
+    profile: "company",
+    waterTypes: ["drinking"],
+  },
+  "Nettoyage quotidien des véhicules",
+  {
+    id: "a-1",
+    zoneId: "z-31",
+    level: "alert",
+    profiles: ["company"],
+    waterTypes: ["drinking"],
+    rules: ["Le lavage professionnel est limité aux dispositifs économes."],
+    startsAt: "2026-09-01",
+    endsAt: "2026-10-31",
+    sourceUrl: "https://vigieau.gouv.fr",
+  },
+  p,
+  { at: "2026-09-29" },
+);
+assert.equal(resultat.impact, "conditional");
+console.log(JSON.stringify(resultat, null, 2));
+```
+
+Lancez-le avec :
+
+```sh
+npm run demo
+```
+
+Résultat à repérer : `impact: conditional`.
 
 ## Utilisation de la bibliothèque
 
