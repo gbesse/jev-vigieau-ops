@@ -1,7 +1,7 @@
 {
   "name": "@gbesse/jev-vigieau-ops",
-  "version": "0.1.0",
-  "description": "Translate French VigiEau drought restrictions into reviewable operational impacts for business sites.",
+  "version": "0.1.1",
+  "description": "Traduit les restrictions sécheresse VigiEau en impacts opérationnels vérifiables pour les sites professionnels.",
   "type": "module",
   "license": "MIT",
   "engines": {

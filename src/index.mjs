@@ -1,4 +1,4 @@
-// Purpose: Implement the package-specific, reviewable decision boundary.
+// Objectif : implémenter la frontière de décision métier propre au dépôt.
 export const IMPACTS=["allowed","conditional","possibly_prohibited","unclear"];
 const PROFILES=new Set(["individual","company","collectivity","farm"]),WATERS=new Set(["drinking","surface","groundwater"]);
 export function site(input){if(!input?.id||!Number.isFinite(input?.latitude)||!Number.isFinite(input?.longitude)||!PROFILES.has(input?.profile))throw new TypeError("Site needs id, coordinates and a valid profile");const waterTypes=[...(input.waterTypes||[])];if(!waterTypes.length||waterTypes.some(x=>!WATERS.has(x)))throw new TypeError("Site needs valid waterTypes");return{id:String(input.id),latitude:input.latitude,longitude:input.longitude,profile:input.profile,waterTypes,activities:[...(input.activities||[])].map(String)};}

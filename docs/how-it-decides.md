@@ -1,5 +1,5 @@
-# How it decides
+# Comment la décision est prise
 
-Coordinates, user profile, water type, validity period and alert level are filtered in code. Jev maps a described operation to the already applicable restriction text. The signed prefectural order remains authoritative.
+Les coordonnées, profils, types d’eau, périodes et niveaux d’alerte restent déterministes. Jev applique seulement le texte fourni à l’opération décrite. L’arrêté préfectoral signé fait foi.
 
-The exact questions and criteria are versioned beside the call in [src/index.mjs](../src/index.mjs). Synthetic demo probabilities are illustrative. Calibrate review thresholds on representative labels before operational use.
+La question et les critères exacts sont versionnés dans [`src/index.mjs`](../src/index.mjs). Les probabilités de la démonstration sont synthétiques. Calibrez les seuils de revue sur des cas français annotés et représentatifs avant tout usage opérationnel.
