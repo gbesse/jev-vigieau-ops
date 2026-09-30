@@ -26,6 +26,7 @@ const resultat = await assessOperation(
     longitude: 1.44,
     profile: "company",
     waterTypes: ["drinking"],
+    zoneIds: ["z-31"], // Résultat d'un rattachement géographique amont à vérifier.
   },
   "Nettoyage quotidien des véhicules",
   {

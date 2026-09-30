@@ -4,7 +4,7 @@
 
 [![Tests](https://github.com/gbesse/jev-vigieau-ops/actions/workflows/test.yml/badge.svg)](https://github.com/gbesse/jev-vigieau-ops/actions/workflows/test.yml) [MIT](LICENSE) · Node.js 22+ · v0.1.3 · Documentation française
 
-Le moteur filtre les restrictions selon le site, le profil d’usager, le type d’eau et la période. Jev relie ensuite une opération décrite aux règles déjà applicables.
+Le moteur filtre les restrictions selon la zone d’alerte vérifiée du site, le profil d’usager, le type d’eau et la période. Jev relie ensuite une opération décrite aux règles déjà applicables. Les coordonnées seules ne prouvent pas l’appartenance à une zone.
 
 ## Démarrage rapide
 
@@ -52,6 +52,7 @@ const resultat = await assessOperation(
     longitude: 1.44,
     profile: "company",
     waterTypes: ["drinking"],
+    zoneIds: ["z-31"], // Identifiant de zone issu d'un rattachement géographique amont.
   },
   "Nettoyage quotidien des véhicules",
   {
@@ -98,7 +99,9 @@ Les noms de l’API JavaScript restent stables pour préserver la compatibilité
 
 ## Frontière de décision
 
-Les coordonnées, profils, types d’eau, périodes et niveaux d’alerte restent déterministes. Jev applique seulement le texte fourni à l’opération décrite. L’arrêté préfectoral signé fait foi.
+L’appelant doit fournir les `zoneIds` applicables au site, obtenus à partir d’une source géographique fiable (par exemple l’API VigiEau pour l’adresse ou les coordonnées). Sans zone vérifiée, `assessOperation` renvoie `zone_unverified` avec `review: true` et n’appelle pas Jev ; une zone différente renvoie `different_zone`. Les coordonnées sont conservées et validées, mais ce paquet ne calcule pas lui-même leur intersection avec les zones d’alerte. Les profils, types d’eau et périodes restent déterministes. Jev applique seulement le texte fourni à l’opération décrite. L’arrêté préfectoral signé fait foi.
+
+Une valeur `endsAt` au format date seule (`AAAA-MM-JJ`) est traitée comme inclusive jusqu’à la fin de cette journée en UTC ; utilisez un horodatage explicite si une heure de fin précise est connue.
 
 La question exacte envoyée à Jev est versionnée dans [`src/index.mjs`](src/index.mjs). Les identifiants, dates, calculs, filtres, seuils et transitions d’état restent gérés par du code ordinaire.
 
