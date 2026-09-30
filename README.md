@@ -2,7 +2,7 @@
 
 **Traduit les restrictions sécheresse VigiEau en impacts opérationnels vérifiables pour les sites professionnels.**
 
-[![Tests](https://github.com/gbesse/jev-vigieau-ops/actions/workflows/test.yml/badge.svg)](https://github.com/gbesse/jev-vigieau-ops/actions/workflows/test.yml) [MIT](LICENSE) · Node.js 22+ · v0.1.2 · Documentation française
+[![Tests](https://github.com/gbesse/jev-vigieau-ops/actions/workflows/test.yml/badge.svg)](https://github.com/gbesse/jev-vigieau-ops/actions/workflows/test.yml) [MIT](LICENSE) · Node.js 22+ · v0.1.3 · Documentation française
 
 Le moteur filtre les restrictions selon la zone d’alerte vérifiée du site, le profil d’usager, le type d’eau et la période. Jev relie ensuite une opération décrite aux règles déjà applicables. Les coordonnées seules ne prouvent pas l’appartenance à une zone.
 
@@ -76,10 +76,20 @@ console.log(JSON.stringify(resultat, null, 2));
 Lancez-le avec :
 
 ```sh
-npm run demo
+npm run demo:principal
 ```
 
 Résultat à repérer : `impact: conditional`.
+
+### Cas limite à tester
+
+Une restriction arrivée à échéance ne déclenche aucune décision Jev. Le code se trouve dans [`examples/cas-limite.mjs`](examples/cas-limite.mjs).
+
+```sh
+npm run demo:limite
+```
+
+Résultat à repérer : `impact: inactive · appels Jev: 0`. La commande `npm run demo` exécute les deux exemples.
 
 ## Utilisation de la bibliothèque
 
